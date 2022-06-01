@@ -5,8 +5,6 @@
 
 #include <string>
 
-extern size_t yy_get_bufferstate_size();
-
 namespace Flub
 {
 	int Driver::parse(const char* filename)
