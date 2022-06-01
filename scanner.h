@@ -13,6 +13,9 @@
 #include "parser.hh"
 #include "location.hh"
 
+#include <string_view>
+
+
 namespace Flub
 {
 
@@ -20,7 +23,8 @@ class Scanner : public yyFlexLexer
 {
 public:
 	Scanner() {}
-	virtual ~Scanner() {}
+
+	bool setBuffer(std::string_view src) noexcept;
 
 	virtual Parser::token_type lex(Parser::semantic_type* yylval, Parser::location_type* yylloc);
 };

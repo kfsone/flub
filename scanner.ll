@@ -10,8 +10,6 @@ using Token = Flub::Parser::token;
 #define YY_USER_ACTION yylloc->step(); yylloc->columns(yyleng);
 #define YY_VERBOSE
 
-int yyFlexLexer::yylex() { abort(); }
-
 %}
 
 /* Target the C++ implementation */
@@ -38,6 +36,37 @@ int yyFlexLexer::yylex() { abort(); }
 %option never-interactive batch
 /* Write a source file, but not a header file */
 %option outfile="scanner.cc"
+
+%{
+
+int yyFlexLexer::yylex() { abort(); }
+
+bool Flub::Scanner::setBuffer(std::string_view str) noexcept
+{
+	yy_buffer_state* state = static_cast<yy_buffer_state*>(yyalloc(sizeof(yy_buffer_state)));
+	if (!state)
+	{
+		return (false);
+	}
+	memset(state, 0, sizeof(yy_buffer_state));
+
+	state->yy_buf_size = (int) (str.size());
+	state->yy_buf_pos = state->yy_ch_buf = const_cast<char*>(str.data());
+	state->yy_is_our_buffer = 0;
+	state->yy_input_file = NULL;
+	state->yy_n_chars = state->yy_buf_size;
+	state->yy_is_interactive = 0;
+	state->yy_at_bol = 1;
+	state->yy_fill_buffer = 0;
+	state->yy_buffer_status = YY_BUFFER_NEW;
+
+	yy_switch_to_buffer( state );
+
+	return (true);
+}
+
+%}
+
 
 
 /* ---- Named pattern fragments ------------------------------------------- */

@@ -420,9 +420,7 @@ using Token = Flub::Parser::token;
 #define YY_USER_ACTION yylloc->step(); yylloc->columns(yyleng);
 #define YY_VERBOSE
 
-int yyFlexLexer::yylex() { abort(); }
-
-#line 426 "scanner.cc"
+#line 424 "scanner.cc"
 /* Target the C++ implementation */
 /* Leave buffer-switching to us */
 /* Don't generate a default rule on our behalf */
@@ -432,9 +430,38 @@ int yyFlexLexer::yylex() { abort(); }
 #define YY_NO_INPUT 1
 /* We're not writing an interpreter */
 /* Write a source file, but not a header file */
+#line 41 "scanner.ll"
+
+int yyFlexLexer::yylex() { abort(); }
+
+bool Flub::Scanner::setBuffer(std::string_view str) noexcept
+{
+	yy_buffer_state* state = static_cast<yy_buffer_state*>(yyalloc(sizeof(yy_buffer_state)));
+	if (!state)
+	{
+		return (false);
+	}
+	memset(state, 0, sizeof(yy_buffer_state));
+
+	state->yy_buf_size = (int) (str.size());
+	state->yy_buf_pos = state->yy_ch_buf = const_cast<char*>(str.data());
+	state->yy_is_our_buffer = 0;
+	state->yy_input_file = NULL;
+	state->yy_n_chars = state->yy_buf_size;
+	state->yy_is_interactive = 0;
+	state->yy_at_bol = 1;
+	state->yy_fill_buffer = 0;
+	state->yy_buffer_status = YY_BUFFER_NEW;
+
+	yy_switch_to_buffer( state );
+
+	return (true);
+}
+
+#line 462 "scanner.cc"
 /* ---- Named pattern fragments ------------------------------------------- */
 /* vvvv Comments not allowed beyond this point vvvvvvvvvvvvvvvvvvvvvvvvvvvv */
-#line 438 "scanner.cc"
+#line 465 "scanner.cc"
 
 #define INITIAL 0
 
@@ -566,15 +593,15 @@ YY_DECL
 		}
 
 	{
-#line 50 "scanner.ll"
+#line 79 "scanner.ll"
 
 
 
-#line 54 "scanner.ll"
+#line 83 "scanner.ll"
 	yylloc->step();
 
 
-#line 578 "scanner.cc"
+#line 605 "scanner.cc"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -629,50 +656,50 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 57 "scanner.ll"
+#line 86 "scanner.ll"
 yylval->emplace<std::string>(yytext); return Token::STRING;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 59 "scanner.ll"
+#line 88 "scanner.ll"
 return Token::INCLUDE;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 60 "scanner.ll"
+#line 89 "scanner.ll"
 return Token::IGNORE;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 62 "scanner.ll"
+#line 91 "scanner.ll"
 yylloc->step();
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 63 "scanner.ll"
+#line 92 "scanner.ll"
 yylloc->step();
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 64 "scanner.ll"
+#line 93 "scanner.ll"
 yylloc->lines (yyleng); yylloc->step();
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 66 "scanner.ll"
+#line 95 "scanner.ll"
 { throw Flub::Parser::syntax_error(*yylloc, "invalid character: " + std::string(yytext)); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 69 "scanner.ll"
+#line 98 "scanner.ll"
 return Token::YYEOF;
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 70 "scanner.ll"
+#line 99 "scanner.ll"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 676 "scanner.cc"
+#line 703 "scanner.cc"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1634,4 +1661,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 70 "scanner.ll"
+#line 99 "scanner.ll"
