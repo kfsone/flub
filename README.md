@@ -32,3 +32,8 @@ A C++ flex scanner but no locations.
 
 [Jonathan Bear's tutorial](http://www.jonathanbeard.io/tutorials/FlexBisonC++)
 Couldn't get this to work - although it may have been a combination of a typo and the lack of an explicit yyFlexLexer::yylex() { ... } override.
+
+# Grammar
+
+It's a very simple grammar, `#` for comments, and the rest is either `include 'filename-in-single-quotes'` or `ignore 'filename'`,
+from stdin.
