@@ -25,9 +25,15 @@ int yyFlexLexer::yylex() { abort(); }
 /* Don't try to push tokens back into the input stream */
 %option noinput
 %option nounput
-/*%option stack*/
+%option stack
 %option verbose
 %option noyylineno
+%option noyyget_lineno yyset_lineno yyget_out yyset_out yyget_in yyset_in
+%option warn
+%option noyymore
+%option ecs
+%option align
+%option read
 /* We're not writing an interpreter */
 %option never-interactive batch
 /* Write a source file, but not a header file */
