@@ -1,5 +1,11 @@
 # Dockerfile that attempts to build from a scanner.ll file and a parser.y
-# You'll want to use `docker run -v ${PWD}:/work`
+#
+# Example use:
+#
+#  docker build --tag flexbison -f Dockerfile.example .
+#  docker run --rm -it -V ${PWD}:/ flexbison
+#
+# and then review the generated files.
 
 FROM ubuntu:latest
 
@@ -13,11 +19,12 @@ RUN if [ -n "${APT_PROXY:-}" ]; then \
     fi
 
 RUN apt update && \
-    apt install -qy build-essential flex bison && \
+    apt install -qy flex bison && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
 VOLUME /work
 WORKDIR /work
 
-CMD flex++ scanner.ll && bison -Wcounterexamples -d parser.y && make && ./parser.bin
+# Run flex and bison to generate files
+CMD flex++ scanner.ll && bison -Wcounterexamples -d parser.y && echo "flex/bison files generated. see 'git status' to see which files."
