@@ -1,0 +1,23 @@
+# Dockerfile that attempts to build from a scanner.ll file and a parser.y
+# You'll want to use `docker run -v ${PWD}:/work`
+
+FROM ubuntu:latest
+
+# I run a local apt-cacher-ng at http://apt.lan:3142/ so by building with
+#  docker build --tag flub --build-arg APT_PROXY=http://apt.lan:3142/,
+#  the following makes my docker builds radically faster.
+ARG APT_PROXY=""
+ENV APT_PROXY=${APT_PROXY}
+RUN if [ -n "${APT_PROXY:-}" ]; then \
+        echo "Acquire::Http::Proxy { \"${APT_PROXY}\"; };" >/etc/apt/apt.conf.d/02proxy; \
+    fi
+
+RUN apt update && \
+    apt install -qy build-essential flex bison && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/*
+
+VOLUME /work
+WORKDIR /work
+
+CMD flex++ scanner.ll && bison -Wcounterexamples -d parser.y && make && ./parser.bin
