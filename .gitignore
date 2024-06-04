@@ -1,2 +1,9 @@
 parser.bin
+.vs
+.vscode
+.idea
+.intellij
+.DS_Store
+out/
+build/
 
