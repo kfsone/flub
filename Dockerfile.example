@@ -13,18 +13,26 @@ FROM ubuntu:latest
 #  docker build --tag flub --build-arg APT_PROXY=http://apt.lan:3142/,
 #  the following makes my docker builds radically faster.
 ARG APT_PROXY=""
-ENV APT_PROXY=${APT_PROXY}
-RUN if [ -n "${APT_PROXY:-}" ]; then \
-        echo "Acquire::Http::Proxy { \"${APT_PROXY}\"; };" >/etc/apt/apt.conf.d/02proxy; \
-    fi
+ENV APT_PROXY=$APT_PROXY
 
-RUN apt update && \
-    apt install -qy flex bison && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
+ARG GENERATED_DIR="generated"
 
 VOLUME /work
+
 WORKDIR /work
 
-# Run flex and bison to generate files
-CMD flex++ scanner.ll && bison -Wcounterexamples -d parser.y && echo "flex/bison files generated. see 'git status' to see which files."
+RUN if [ -n "${APT_PROXY:-}" ]; then \
+        echo "Acquire::Http::Proxy { \"${APT_PROXY}\"; };" >/etc/apt/apt.conf.d/02proxy; \
+    fi ; \
+    apt update && \
+    apt install -qy --no-install-recommends flex bison m4 libfl-dev && \
+    apt clean && \
+    rm -rf /var/lib/apt/lists/* /etc/apt/apt.conf.d/02proxy
+
+COPY ./docker-script.sh /work
+
+ENV GENERATED_DIR=$GENERATED_DIR
+ENTRYPOINT [ "/bin/bash", "/work/docker-script.sh" ]
+CMD ["./generated"]
+
+# vim: set sw=4 sts=4 ts=4 expandtab

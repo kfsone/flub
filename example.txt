@@ -1,0 +1,19 @@
+# this is an example text file of a grammar that has two keywords,
+# include and ignore. The application simply reports how it sees
+# the parse.
+#
+# Using `command: command | command commands` results in right
+# recursion, yielding 'last' first.
+
+ignore 'first'
+
+
+
+	include   'fred'
+
+
+  include   'bob'   
+
+ignore 'julie' 
+include 'julie'
+	include	'last'

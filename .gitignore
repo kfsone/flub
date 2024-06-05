@@ -6,4 +6,5 @@ parser.bin
 .DS_Store
 out/
 build/
-
+build-dir/
+generated/
