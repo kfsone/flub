@@ -34,10 +34,10 @@ target_include_directories (example_parser PUBLIC "${CMAKE_CURRENT_LIST_DIR}" "$
 if (FLUB_ADDRESS_SANITIZE)
 	# I'm fairly sure MSVC would access -fsanitize=address too, but...
 	if (MSVC)
-		target_compile_options (example_parser /fsanitize=address)
+		target_compile_options (example_parser PUBLIC /fsanitize=address)
 	else ()
-		target_compile_options (example_parser -fsanitize=address)
-		target_link_options (example_parser -fsanitize=address)
+		target_compile_options (example_parser PUBLIC -fsanitize=address)
+		target_link_options (example_parser PUBLIC -fsanitize=address)
 	endif ()
 endif ()
 
