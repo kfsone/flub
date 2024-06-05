@@ -5,6 +5,8 @@ set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project (flub_example LANGUAGES CXX)
 
+option (FLUB_ADDRESS_SANITIZE "Build with address sanitizer" OFF)
+
 find_package (FLEX REQUIRED)
 find_package (BISON REQUIRED)
 
@@ -27,5 +29,15 @@ add_executable (
 
 	driver.h
 )
+
 target_include_directories (example_parser PUBLIC "${CMAKE_CURRENT_LIST_DIR}" "${CMAKE_CURRENT_BINARY_DIR}")
+if (FLUB_ADDRESS_SANITIZE)
+	# I'm fairly sure MSVC would access -fsanitize=address too, but...
+	if (MSVC)
+		target_compile_options (example_parser /fsanitize=address)
+	else ()
+		target_compile_options (example_parser -fsanitize=address)
+		target_link_options (example_parser -fsanitize=address)
+	endif ()
+endif ()
 
